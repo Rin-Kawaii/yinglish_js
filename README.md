@@ -14,6 +14,8 @@
 ``` bash
 git clone https://github.com/Rin-Kawaii/yinglish_js.git
 
+cd yinglish_js
+
 npm i
 
 node main.js
