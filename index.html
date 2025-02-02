@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <title>淫语翻译机 | Yinglish translator</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+            textarea {
+                resize: none;
+                border-radius: 12px;
+                font-size: 16px;
+                padding: 12px;
+            }
+            img {
+                width: 100px;
+                margin-right: 12px;
+            }
+            a {
+                display: flex;
+                align-items: center;
+            }
+            a > img {
+                width: 32px;
+            }
+            .main {
+                height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .card {
+                display: flex;
+                flex-direction: column;
+            }
+            .title {
+                margin-bottom: 12px;
+                display: flex;
+                align-items: center;
+            }
+            .show {
+                display: flex;
+            }
+            .result {
+                width: 353px;
+                height: 506px;
+                border: 1px solid #767676;
+                border-radius: 12px;
+                margin-left: 32px;
+                padding: 12px;
+                position: relative;
+            }
+            .result > .btn {
+                position: absolute;
+                bottom: 12px;
+                right: 12px;
+            }
+            .bar {
+                margin-top: 12px;
+            }
+            .licentious {
+                display: flex;
+                align-items: center;
+            }
+            .licentious > p {
+                width: 72px;
+            }
+        </style>
+        <link rel="stylesheet" href="https://unpkg.com/mdui@2/mdui.css" />
+        <script src="https://unpkg.com/mdui@2/mdui.global.js"></script>
+    </head>
+    <body>
+        <div class="main">
+            <div class="card">
+                <div class="title">
+                    <img src="/assets/sticker.webp" alt="" />
+                    <h1>淫语翻译机!</h1>
+                    <a href="https://github.com/Rin-Kawaii/yinglish_js" target="_blank"><img src="/assets/github.svg" alt="" /></a>
+                </div>
+                <div class="show">
+                    <textarea id="input" name="story" rows="28" cols="42"></textarea>
+                    <div class="result">
+                        <p id="result"></p>
+                        <mdui-button class="btn" id="copy">❤ 复制 ❤</mdui-button>
+                    </div>
+                </div>
+                <div class="bar">
+                    <div class="licentious">
+                        <p>淫乱度</p>
+                        <mdui-slider id="licentious" min="0" max="10" step="1" style="margin-top: 6px"></mdui-slider>
+                    </div>
+                    <mdui-button class="btn" id="translate">变奇怪吧❤</mdui-button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const input = document.getElementById("input");
+            const licentious = document.getElementById("licentious");
+            const button = document.getElementById("translate");
+            const copy = document.getElementById("copy");
+            const result = document.getElementById("result");
+
+            button.addEventListener("click", () => {
+                const text = input.value;
+                const licentiousv = licentious.value / 10;
+
+                const query = new URLSearchParams({ text, licentious: licentiousv });
+                fetch(`/api/translate?${query}`)
+                    .then((response) => response.json())
+                    .then((data) => {
+                        result.textContent = data.translatedText;
+                    })
+                    .catch((error) => console.error("请求失败:", error));
+            });
+
+            copy.addEventListener("click", () => {
+                const content = result.textContent;
+                navigator.clipboard
+                    .writeText(content)
+                    .then(() => {
+                        copy.textContent = "复制成功!";
+                        setTimeout(() => {
+                            copy.textContent = "❤ 复制 ❤";
+                        }, 3000);
+                    })
+                    .catch((err) => {
+                        copy.textContent = "复制失败!";
+                        setTimeout(() => {
+                            copy.textContent = "❤ 复制 ❤";
+                        }, 3000);
+                        console.error("复制失败:", err);
+                    });
+            });
+        </script>
+    </body>
+</html>
